@@ -8,6 +8,8 @@ body {
   background-size: 100% 21px;
 }
 
+
+
 body:before {
   content: "";
   display: inline-block;
@@ -17,4 +19,9 @@ body:before {
   position: fixed;
   left: 4em;
   top: 3em;
+}
+
+header {
+  position: fixed !important; 
+  z-index: 2;
 }

@@ -1,14 +1,14 @@
-import { LinearProgress, TextField, Snackbar, Box } from '@material-ui/core'
-import { ArrowBack, ArrowForward } from '@material-ui/icons'
+import { Box, LinearProgress, Snackbar, TextField } from '@material-ui/core'
+import { Pagination } from '@material-ui/lab'
 import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link, Route, useHistory, useRouteMatch } from 'react-router-dom'
 import CharacterListRow from '../components/CharacterListRow'
 import PageWrapper from '../components/PageWrapper'
 import useDebouncedValue from '../libs/hooks/useDebouncedValue'
+import characterFromObj from '../libs/utils/characterFromObj'
 import queryService from '../services/queryService'
 import CharacterModal from './CharacterModal'
-import characterFromObj from '../libs/utils/characterFromObj'
 
 
 const TRIGGER_SEARCH_DELAY = 1000
@@ -37,6 +37,8 @@ const Home: FunctionComponent = () => {
         history.push(routeMatch.path)
     }
 
+    const numPages = Math.ceil(count / PAGE_SIZE)
+
     return (
         <PageWrapper>
             <h1>Search Game of Thrones Characters</h1>
@@ -59,7 +61,8 @@ const Home: FunctionComponent = () => {
 
             {
                 !isLoading && !isError &&
-                <PaginationControls count={count} pageSize={PAGE_SIZE} page={page} onChange={(pageNum) => setPage(pageNum)} />
+                <Pagination page={page} count={numPages} onChange={(e, pageNum) => setPage(pageNum)}/>
+                
             }
 
             {
@@ -119,38 +122,6 @@ type PaginationProps = {
     count: number,
     pageSize: number,
 }
-
-const PaginationControls: FunctionComponent<PaginationProps> = ({ page, onChange, count, pageSize }) => {
-
-    const from = (page - 1) * PAGE_SIZE + 1
-    const to = Math.min(page * PAGE_SIZE, count)
-
-    const numPages = Math.ceil(count / pageSize)
-
-    const onPageSelect = (pageNum: number) => {
-        onChange(pageNum)
-    }
-
-    return <div style={styles.paginator}>
-        <ArrowBack onClick={() => onPageSelect(Math.max(page-1,1))} />
-        {
-            Array.from({length:numPages}).map((_,idx) => {
-                const pageNum = idx + 1
-                if (page - 1 === idx) {
-                    return <span style={styles.paginatorPageButtonCurrent}>{pageNum}</span>
-                }
-
-                return <span key={idx} style={styles.paginatorPageButton} onClick={() => onPageSelect(pageNum)}>{pageNum}</span>
-            })
-        }
-        <ArrowForward onClick={() => onPageSelect(Math.min(page+1,numPages))} />
-        <br />
-        {`Displaying ${from} to ${to} of ${count} results`}
-    </div>
-}
-
-
-
 
 const styles = {
     paginatorPageButtonCurrent: {
