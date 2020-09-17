@@ -1,0 +1,18 @@
+
+div.PageWrapper__outer {
+    display: flex;        
+    justify-content: center;
+}
+
+div.PageWrapper__page {    
+    max-width: 40rem;
+    min-height: 80vh;
+    flex-basis: 40rem;    
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 1;
+    box-shadow: 0.25em 0.25em 1em;
+    margin: 1em;
+    padding: 1em;
+    background: white;
+}
